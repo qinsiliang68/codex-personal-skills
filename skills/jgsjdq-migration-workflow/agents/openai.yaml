@@ -1,0 +1,4 @@
+interface:
+  display_name: "JGSJDQ Migration Workflow"
+  short_description: "Migrate old jgsjdq with JSON and Office SDK fidelity."
+  default_prompt: "Use $jgsjdq-migration-workflow to migrate this old jgsjdq project into new-jgsjdq."

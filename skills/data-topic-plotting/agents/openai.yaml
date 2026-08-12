@@ -1,0 +1,4 @@
+interface:
+  display_name: "Data Topic Plotting"
+  short_description: "Plot data reports with readable axes."
+  default_prompt: "Use $data-topic-plotting to turn experiment data into an HTML report with readable charts and tables."

@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0.0",
+  "repository": "qinsiliang68/codex-personal-skills",
+  "visibility": "public",
+  "scope": "personal_codex_skills_only",
+  "exclusions": [
+    "Codex system skills",
+    "plugin-provided skills",
+    "runtime and plugin caches",
+    "memory and sessions",
+    "credentials and private user data"
+  ],
+  "skills": [
+    {
+      "name": "data-topic-plotting",
+      "path": "skills/data-topic-plotting",
+      "description": "Handle data-analysis plotting requests and HTML result reports, especially experiment comparisons where charts must make differences visible. Use when the user asks for data topic processing, plotting, visualization, data analysis, HTML reports, tables plus charts, grouped experiment plots, HN/RN validation summaries, intercept/filter curves, operational metric comparisons, broken axes, truncated axes, compressed axes, zoomed y-axes, or clearer visual comparison.",
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 236,
+          "sha256": "6be5cf92b4e5efa58b331771f3f5059d76bf42a07bfe373248b9b4f90ea22da2"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 4078,
+          "sha256": "356cd80f62bf798412619d46390a3d03e6850ecacb4b81c32b80c3088ed1579f"
+        }
+      ]
+    },
+    {
+      "name": "jgsjdq-migration-workflow",
+      "path": "skills/jgsjdq-migration-workflow",
+      "description": "Code migration workflow for rebuilding old C:\\GitHub\\jgsjdq projects inside C:\\GitHub\\new-jgsjdq with strict JSON contracts, calculation/display consistency, DOCX rendering audits, project-management discipline, and AIOps-style quality gates. Use when the user asks how to write new-jgsjdq from old jgsjdq, mentions 施工流程 as coding workflow, A03/A15 calculation-book migration, JSON强形式, display-layer vs calculation-layer consistency, formula/table/Book IR contracts, renderer checks, or AIOps checks for calculation-book pipelines.",
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 235,
+          "sha256": "92f5145ab2cd24c5df97fa3410adda92f1251c16bd3d18c156005b805846d390"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 16220,
+          "sha256": "8528947adde0dbb3cccc428ee6935d265f90815f4c66dce2e6815925f3691f8f"
+        }
+      ]
+    },
+    {
+      "name": "parser-output-manual-annotation",
+      "path": "skills/parser-output-manual-annotation",
+      "description": "Manual annotation protocol for parser-output Markdown from OCR/PDF parsers such as PaddleOCR, Docling, Marker, or similar pipelines. Use when Codex is asked to label parser output documents, repair annotation tags, create human-review extracts, compare labels, or prepare training data from parsed Markdown while preserving original text.",
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 243,
+          "sha256": "8e9f3ad6771ca9185b54a4e45a13bcf50ef7d919541555c67ea90a2f2d4c2ea9"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 7311,
+          "sha256": "8ed873fdca1f823d24bff6c754fe51c6b27e32c967c78595d22f6f04d70fe614"
+        }
+      ]
+    },
+    {
+      "name": "repo-development-protocol",
+      "path": "skills/repo-development-protocol",
+      "description": "Standard development protocol for repository changes. Use before and after any code, schema, pipeline, API, MCP, test, config, script, or documentation modification. Enforces DAA, TDD, small rollback-safe commits, documentation sync, and repo hygiene.",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 10096,
+          "sha256": "324ef6ae9b9d54a147a0db46f41bc4308ae0ae010ae535dfdf86a7444b02a9fe"
+        }
+      ]
+    },
+    {
+      "name": "repo-file-management",
+      "path": "skills/repo-file-management",
+      "description": "Repository development file-management and asset-governance rules for AI-assisted projects. Use before creating, moving, deleting, packaging, committing, or reorganizing files, folders, datasets, parser outputs, annotations, logs, generated artifacts, model assets, review packages, or temporary outputs. Enforces strict file identity, ownership, lifecycle, manifest, protected-source, current-repo folder contracts, and no-random-dumping rules, especially for multi-agent data and document-processing repositories.",
+      "files": [
+        {
+          "path": "SKILL.md",
+          "bytes": 15110,
+          "sha256": "152a5c9df13e344d03cf9b05a8a3adfe62705fdcb0f9606b1fd11c7ad8ec78a3"
+        }
+      ]
+    }
+  ]
+}

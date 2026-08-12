@@ -1,0 +1,4 @@
+interface:
+  display_name: "Parser Output Manual Annotation"
+  short_description: "Manual parser-output labeling protocol"
+  default_prompt: "Use $parser-output-manual-annotation to label one parser output document by hand and verify it."
