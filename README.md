@@ -25,6 +25,7 @@ This is a public, versioned collection of personal Codex skills maintained by `q
 | `parser-output-manual-annotation` | 对 OCR/PDF parser 的 Markdown 输出执行人工标注、保真检查和训练数据准备。 |
 | `repo-development-protocol` | 对代码、配置、schema、管线和文档修改执行 DAA、TDD、验证和小回滚单元。 |
 | `repo-file-management` | 管理仓库文件身份、生命周期、目录边界、清单、生成物和发布资产。 |
+| `windows-powershell-efficiency` | 在原生 Windows PowerShell 中执行有界查询、精确路径操作、失败归因和渐进式验证。 |
 
 每个 Skill 位于 `skills/<skill-name>/`，入口文件固定为 `SKILL.md`。若存在 `agents/openai.yaml`，它只定义该 Skill 的展示元数据和默认提示词。
 

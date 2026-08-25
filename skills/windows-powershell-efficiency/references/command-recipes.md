@@ -1,0 +1,219 @@
+# PowerShell Command Recipes
+
+Read only the section needed for the current operation. These are preferred patterns, not mandatory syntax when a project-specific tool provides a better answer.
+
+## Concise initial probe
+
+Use only when the facts are not already known:
+
+```powershell
+$PSVersionTable.PSVersion
+(Get-Location).Path
+Get-Command git, python, py, uv, rg, fd -ErrorAction SilentlyContinue |
+    Select-Object Name, Source
+```
+
+Do not run several equivalent `where.exe`, `Get-Command`, and `--version` probes afterward. If a project virtual environment or tool manifest already identifies the runtime, inspect that directly.
+
+## Inspect a known directory
+
+```powershell
+Get-ChildItem -LiteralPath $path -Force |
+    Select-Object -First 100 Name, Mode, Length
+```
+
+For a single known path:
+
+```powershell
+Test-Path -LiteralPath $path
+Resolve-Path -LiteralPath $path
+```
+
+## Find repository files
+
+For tracked files:
+
+```powershell
+git ls-files
+git ls-files '*trainer*'
+```
+
+With ripgrep:
+
+```powershell
+rg --files -g 'train.py'
+rg --files src tests | Select-Object -First 100
+```
+
+If indexed tools cannot answer the question, use targeted recursion:
+
+```powershell
+Get-ChildItem -LiteralPath $sourceRoot -File -Recurse -Filter 'train.py' -ErrorAction SilentlyContinue |
+    Select-Object -First 20 -ExpandProperty FullName
+```
+
+`Select-Object -First` limits displayed results, not necessarily traversal cost. Narrow `$sourceRoot`, use `-Filter`, and use a suitable `-Depth` when possible.
+
+## Search text
+
+Search expected directories first:
+
+```powershell
+rg -n 'target_text' src tests
+```
+
+Use task-relevant exclusions for a wider search:
+
+```powershell
+rg -n 'target_text' . `
+    -g '!node_modules/**' `
+    -g '!.venv/**' `
+    -g '!build/**' `
+    -g '!dist/**'
+```
+
+Do not exclude directories that may own the requested behavior. In particular, keep `.github` in scope for CI, automation, template, or dependency-management work.
+
+`rg --max-count 50` caps matches per file, not globally. To cap emitted lines globally:
+
+```powershell
+rg -n 'target_text' src tests | Select-Object -First 50
+```
+
+## Read selected content
+
+Beginning of a file:
+
+```powershell
+Get-Content -LiteralPath $path -TotalCount 120
+```
+
+Selected range:
+
+```powershell
+Get-Content -LiteralPath $path |
+    Select-Object -Skip 200 -First 100
+```
+
+For code, first locate symbols and then read their surrounding region:
+
+```powershell
+rg -n 'class Trainer|def train|def validate' $path
+```
+
+Do not reread unchanged content already available in the task context.
+
+## Inspect Git state compactly
+
+```powershell
+git status --short
+git diff --stat
+git diff -- 'src/trainer.py'
+git log -n 5 --oneline
+```
+
+Request the full repository diff only when the complete diff is itself necessary evidence.
+
+## Construct and reuse paths
+
+```powershell
+$repoRoot = (Get-Location).Path
+$sourceRoot = Join-Path $repoRoot 'src'
+$configPath = Join-Path $repoRoot 'configs\train.yaml'
+```
+
+Use `-LiteralPath` with known filenames, especially when brackets or wildcard characters may appear.
+
+## Run native programs safely
+
+```powershell
+pytest tests\test_model.py -q
+$testCode = $LASTEXITCODE
+
+if ($testCode -ne 0) {
+    Write-Output "pytest exit code: $testCode"
+}
+```
+
+For Windows PowerShell 5.1 compatibility, issue dependent commands separately and test `$LASTEXITCODE` instead of assuming `&&`.
+
+## Pipe compound statements safely
+
+Windows PowerShell may reject a language-level `foreach` statement piped directly into another command:
+
+```powershell
+foreach ($item in $items) {
+    [pscustomobject]@{ Name = $item.Name }
+} | ConvertTo-Json
+```
+
+Collect the statement results first:
+
+```powershell
+$results = foreach ($item in $items) {
+    [pscustomobject]@{ Name = $item.Name }
+}
+$results | ConvertTo-Json
+```
+
+An explicit collecting expression is also valid when it remains readable:
+
+```powershell
+@(foreach ($item in $items) {
+    [pscustomobject]@{ Name = $item.Name }
+}) | ConvertTo-Json
+```
+
+This restriction concerns the language statement. The pipeline cmdlet `ForEach-Object` is a different construct and can participate in a pipeline normally.
+
+## Select a Python runtime once
+
+Prefer the interpreter established by the project. If a local virtual environment exists and is intended for the task:
+
+```powershell
+.\.venv\Scripts\python.exe script.py
+```
+
+Do not alternate between `python`, `py`, `uv run python`, and virtual-environment interpreters without a concrete reason.
+
+## Avoid nested quoting
+
+For short, one-off multiline Python input:
+
+```powershell
+@'
+print("literal input")
+'@ | python -
+```
+
+Use a durable project script only when the logic is part of the approved task and should be maintained or reused.
+
+## Validate progressively
+
+Examples for a Python project:
+
+```powershell
+python -m py_compile src\trainer.py
+pytest tests\test_trainer.py::test_resume_training -q
+pytest tests\test_trainer.py -q
+ruff check src\trainer.py
+```
+
+Run broader checks only when the affected surface or repository policy justifies them.
+
+## Show exact properties when needed
+
+Prefer raw compact values:
+
+```powershell
+Get-ChildItem -LiteralPath $path -File |
+    Select-Object -ExpandProperty FullName
+```
+
+If PowerShell's default table truncates a diagnostic property, a final formatter is appropriate:
+
+```powershell
+Get-Item -LiteralPath $path |
+    Select-Object FullName, Length, Attributes |
+    Format-List
+```

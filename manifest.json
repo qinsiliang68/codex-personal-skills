@@ -85,6 +85,28 @@
           "sha256": "152a5c9df13e344d03cf9b05a8a3adfe62705fdcb0f9606b1fd11c7ad8ec78a3"
         }
       ]
+    },
+    {
+      "name": "windows-powershell-efficiency",
+      "path": "skills/windows-powershell-efficiency",
+      "description": "Use when executing shell, filesystem, repository, testing, build, or diagnostic operations in native Windows PowerShell. Enforces targeted queries, bounded output, literal paths, stable tool selection, and diagnosis before retry. Do not use for answer-only Windows questions that require no shell operation.",
+      "files": [
+        {
+          "path": "references/command-recipes.md",
+          "bytes": 5391,
+          "sha256": "892a761812be08b3e69cd760906411934c98b6aba42d0337303d830367effac8"
+        },
+        {
+          "path": "references/error-playbook.md",
+          "bytes": 3599,
+          "sha256": "bb21b958d5115cb560ec60c742fd360fb861256c5e956f9ad1043199f75fb64c"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 8222,
+          "sha256": "7242acee9043102ea832b3d35b98f5f2d2f2990e8f851c26ae38be426f3c9bfc"
+        }
+      ]
     }
   ]
 }

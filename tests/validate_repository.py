@@ -15,6 +15,7 @@ EXPECTED_SKILLS = {
     "parser-output-manual-annotation",
     "repo-development-protocol",
     "repo-file-management",
+    "windows-powershell-efficiency",
 }
 EXPECTED_REPOSITORY = "qinsiliang68/codex-personal-skills"
 BANNED_PATH_PARTS = {
@@ -85,7 +86,7 @@ class PublicSkillRepositoryTests(unittest.TestCase):
         ):
             self.assertTrue((ROOT / relative).is_file(), relative)
 
-    def test_exactly_five_personal_skills_are_published(self) -> None:
+    def test_expected_personal_skills_are_published(self) -> None:
         self.assertTrue(SKILLS_ROOT.is_dir())
         actual = {path.name for path in SKILLS_ROOT.iterdir() if path.is_dir()}
         self.assertEqual(EXPECTED_SKILLS, actual)
