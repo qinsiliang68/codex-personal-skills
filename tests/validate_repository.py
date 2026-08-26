@@ -108,6 +108,27 @@ class PublicSkillRepositoryTests(unittest.TestCase):
             self.assertEqual(skill_name, metadata.get("name"))
             self.assertTrue(metadata.get("description"), skill_name)
 
+    def test_windows_powershell_skill_covers_transactional_receipts(self) -> None:
+        skill_text = (
+            SKILLS_ROOT / "windows-powershell-efficiency" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        recipes_text = (
+            SKILLS_ROOT
+            / "windows-powershell-efficiency"
+            / "references"
+            / "command-recipes.md"
+        ).read_text(encoding="utf-8")
+        combined = f"{skill_text}\n{recipes_text}"
+        for required in (
+            "OrderedDictionary",
+            "Measure-Object -Property",
+            "[pscustomobject]",
+            "status = 'FAILED'",
+            "['status'] = 'FAILED'",
+            "['status'] = 'PASS'",
+        ):
+            self.assertIn(required, combined)
+
     def test_manifest_matches_every_published_skill_file(self) -> None:
         manifest_path = ROOT / "manifest.json"
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))

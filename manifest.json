@@ -18,8 +18,8 @@
       "files": [
         {
           "path": "agents/openai.yaml",
-          "bytes": 236,
-          "sha256": "6be5cf92b4e5efa58b331771f3f5059d76bf42a07bfe373248b9b4f90ea22da2"
+          "bytes": 232,
+          "sha256": "030c2dcbfdbd619ddd28fc028fe1bcc961241d1ce441473840907bab8785d1e4"
         },
         {
           "path": "SKILL.md",
@@ -52,8 +52,8 @@
       "files": [
         {
           "path": "agents/openai.yaml",
-          "bytes": 243,
-          "sha256": "8e9f3ad6771ca9185b54a4e45a13bcf50ef7d919541555c67ea90a2f2d4c2ea9"
+          "bytes": 239,
+          "sha256": "f211252ee07d445aad9732fa1b02bbce638181884a9e4967ef8903cc3f882b61"
         },
         {
           "path": "SKILL.md",
@@ -93,8 +93,8 @@
       "files": [
         {
           "path": "references/command-recipes.md",
-          "bytes": 5391,
-          "sha256": "892a761812be08b3e69cd760906411934c98b6aba42d0337303d830367effac8"
+          "bytes": 6722,
+          "sha256": "e8c9cb8edde58b0b3c45a763bf02f7b34d1feebc2a030b13e3b115f3886ce8cd"
         },
         {
           "path": "references/error-playbook.md",
@@ -103,8 +103,8 @@
         },
         {
           "path": "SKILL.md",
-          "bytes": 8222,
-          "sha256": "7242acee9043102ea832b3d35b98f5f2d2f2990e8f851c26ae38be426f3c9bfc"
+          "bytes": 8779,
+          "sha256": "7514084edf97e61ec5b9c6a5a67329b38c4347335053766190ec0d4a5964c139"
         }
       ]
     }

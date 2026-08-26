@@ -77,6 +77,8 @@ Do not assume `&&` unless PowerShell 7 has already been confirmed. For native ex
 
 In Windows PowerShell, do not pipe a language-level `foreach (...) { ... }` statement directly into another command. Assign its results to a variable first, or wrap the statement in an explicit collecting expression, then pipe the collected result.
 
+Treat `[ordered]@{}` as an `OrderedDictionary`, not as a `[pscustomobject]`. Do not assume `Measure-Object -Property` will read dictionary keys as object properties in Windows PowerShell 5.1. Accumulate numeric totals explicitly while constructing rows, or emit `[pscustomobject]` rows first. For status receipts, initialize failure, perform every fallible calculation, set success last, and force failure again in `catch`; never emit `PASS` together with an error. See [references/command-recipes.md](references/command-recipes.md) for the exact pattern.
+
 Use `rg`, Git, Python, test runners, and project-specific tools for work they perform more reliably than a custom PowerShell pipeline.
 
 ## Avoid quoting and script-generation traps

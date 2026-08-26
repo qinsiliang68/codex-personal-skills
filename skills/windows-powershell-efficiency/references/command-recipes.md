@@ -166,6 +166,44 @@ An explicit collecting expression is also valid when it remains readable:
 
 This restriction concerns the language statement. The pipeline cmdlet `ForEach-Object` is a different construct and can participate in a pipeline normally.
 
+## Aggregate ordered dictionaries and finalize receipts safely
+
+`[ordered]@{}` creates an `OrderedDictionary`. In Windows PowerShell 5.1, its keys are not reliable input properties for `Measure-Object -Property`:
+
+```powershell
+$rows += [ordered]@{ bytes = [int64]$item.Length }
+$total = ($rows | Measure-Object -Property bytes -Sum).Sum
+```
+
+Accumulate the scalar while constructing rows, and use `[pscustomobject]` when later pipeline commands need properties:
+
+```powershell
+$rows = @()
+[int64]$total = 0
+foreach ($item in $items) {
+    [int64]$bytes = $item.Length
+    $rows += [pscustomobject]@{ bytes = $bytes }
+    $total += $bytes
+}
+```
+
+For a machine-readable receipt, keep the default state failed. Complete every fallible calculation before setting success, and use dictionary indexers for state updates:
+
+```powershell
+$state = [ordered]@{ status = 'FAILED'; error = $null }
+try {
+    # Perform and verify the operation, then finish all receipt fields.
+    $state['total_bytes'] = $total
+    $state['status'] = 'PASS'
+} catch {
+    $state['status'] = 'FAILED'
+    $state['error'] = $_.Exception.Message
+}
+$json = $state | ConvertTo-Json -Depth 4
+```
+
+Do not perform another fallible receipt calculation after assigning `PASS`. A failed operation must not leave a receipt containing both a success status and an error.
+
 ## Select a Python runtime once
 
 Prefer the interpreter established by the project. If a local virtual environment exists and is intended for the task:
