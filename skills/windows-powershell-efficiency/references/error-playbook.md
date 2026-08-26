@@ -38,6 +38,23 @@ Get-Command commandName -ErrorAction SilentlyContinue
 
 If absent, inspect the project's documented toolchain or known environment. Do not install software or rotate among package managers without authorization and a verified need.
 
+## COMMAND_SHIM_OR_WRAPPER
+
+Trigger this category when the selected command resolves to an unexpected `.bat`, `.cmd`, `.ps1`, deny stub, shim, or wrapper, or when it emits fixed text/reports success without the required side effect.
+
+Required response:
+
+1. Mark the attempted native operation as **not executed**, regardless of its exit code.
+2. Enumerate every candidate and inspect the exact source:
+
+```powershell
+Get-Command ssh, scp, sftp -All -ErrorAction SilentlyContinue |
+    Select-Object Name, Source, CommandType
+```
+
+3. Do not repeat the shimmed command. If the operation is authorized, invoke the intended native `.exe` by its verified absolute path; otherwise stop at the permission boundary.
+4. Verify the real side effect, such as the remote file hash, remote receipt, installed package, or produced artifact, before reporting success.
+
 ## POWERSHELL_PARSE_ERROR
 
 Reduce nesting and separate the operation into understandable statements. Prefer variables, literal here-strings, and direct tool arguments.

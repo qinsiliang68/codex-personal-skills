@@ -98,13 +98,13 @@
         },
         {
           "path": "references/error-playbook.md",
-          "bytes": 3599,
-          "sha256": "bb21b958d5115cb560ec60c742fd360fb861256c5e956f9ad1043199f75fb64c"
+          "bytes": 4453,
+          "sha256": "b8b00eb9f3443a7a9df10a185c4b2caf4fea225acca5fa0a8726ffae6d174d34"
         },
         {
           "path": "SKILL.md",
-          "bytes": 8779,
-          "sha256": "7514084edf97e61ec5b9c6a5a67329b38c4347335053766190ec0d4a5964c139"
+          "bytes": 9537,
+          "sha256": "2aa844e7266c9754cec57a1b17d7f7d11b9ca2805425d4356e95ccdd9e0c2940"
         }
       ]
     }

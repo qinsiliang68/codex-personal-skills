@@ -35,6 +35,8 @@ Probe only facts that are required and not already known. During the task, retai
 
 Do not repeat an established probe unless there is concrete evidence that the environment, directory, interpreter, or tool availability changed.
 
+Before the first invocation of any access-sensitive native tool such as `ssh`, `scp`, `sftp`, or a package manager—and again after any permission, sandbox, or `PATH` change—resolve it with `Get-Command <name> -All` and record `Source` plus `CommandType`. If the selected command is an unexpected `.bat`, `.cmd`, `.ps1`, deny stub, shim, or wrapper, the native operation is **not executed**: do not run it, do not accept its exit code, and do not report success. When the operation is authorized, select the intended native `.exe` from the resolved candidates or a verified system path, invoke that exact path, and verify the expected side effect. A zero exit code from a wrapper never proves that a transfer, remote command, install, or build occurred.
+
 When a concise initial probe is needed, use the recipe in [references/command-recipes.md](references/command-recipes.md).
 
 ## Query before exploring
