@@ -75,6 +75,8 @@ Use Windows paths as Windows paths:
 - quote paths containing spaces;
 - avoid unnecessary `/mnt/c/...` or `/c/...` conversions.
 
+When combining cmdlet calls with Boolean operators, wrap each invocation in parentheses: `if ((Test-Path -LiteralPath $first) -or (Test-Path -LiteralPath $second))`. Without the parentheses, Windows PowerShell can bind `-or` and the second `-LiteralPath` as arguments to the first cmdlet, report that `LiteralPath` was specified more than once, and then continue if the error is non-terminating.
+
 Do not assume `&&` unless PowerShell 7 has already been confirmed. For native executables, inspect their output and `$LASTEXITCODE` before deciding whether another command is needed.
 
 In Windows PowerShell, do not pipe a language-level `foreach (...) { ... }` statement directly into another command. Assign its results to a variable first, or wrap the statement in an explicit collecting expression, then pipe the collected result.

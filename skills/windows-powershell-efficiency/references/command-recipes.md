@@ -29,6 +29,16 @@ Test-Path -LiteralPath $path
 Resolve-Path -LiteralPath $path
 ```
 
+For two path predicates, parenthesize each cmdlet call before applying Boolean operators:
+
+```powershell
+if ((Test-Path -LiteralPath $first) -or (Test-Path -LiteralPath $second)) {
+    # At least one path exists.
+}
+```
+
+Do not write `Test-Path -LiteralPath $first -or Test-Path -LiteralPath $second`; Windows PowerShell may treat the latter tokens as additional parameters to the first command.
+
 ## Find repository files
 
 For tracked files:
