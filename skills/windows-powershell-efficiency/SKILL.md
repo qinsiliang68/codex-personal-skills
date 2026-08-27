@@ -91,6 +91,8 @@ For short one-off multiline input, prefer a literal PowerShell here-string piped
 
 When a command develops multiple escaping layers, simplify its structure before retrying it.
 
+In an expandable string, delimit a variable when the following character can be parsed as part of its name or scope. In particular, write `"${path}:$message"`, not `"$path:$message"`; the latter is a parser error because PowerShell treats the colon as variable-scope syntax.
+
 ## Diagnose before retrying
 
 A failed command is evidence. Read the error, classify the failure, form one concrete hypothesis, and make one targeted correction that tests that hypothesis.

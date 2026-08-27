@@ -216,6 +216,14 @@ Do not alternate between `python`, `py`, `uv run python`, and virtual-environmen
 
 ## Avoid nested quoting
 
+Delimit a variable before a literal colon in an expandable string:
+
+```powershell
+"${path}:$message"
+```
+
+Do not write `"$path:$message"`; PowerShell parses `$path:` as a scoped variable reference and fails before execution.
+
 For short, one-off multiline Python input:
 
 ```powershell
