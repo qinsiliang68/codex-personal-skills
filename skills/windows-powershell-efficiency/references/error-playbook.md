@@ -65,6 +65,8 @@ Do not add more escaping layers to an already fragile expression.
 
 Read stdout, stderr, and `$LASTEXITCODE`. Distinguish a native program failure from a PowerShell pipeline or formatting issue.
 
+Windows PowerShell 5.1 converts native stderr into error records. Some successful native commands, including Git plumbing commands, write informational text to stderr; with `$ErrorActionPreference = 'Stop'`, PowerShell can terminate before `$LASTEXITCODE` is checked. For that exact invocation, temporarily use `Continue`, capture `2>&1`, save `$LASTEXITCODE`, restore the prior preference, and decide success from the exit code plus the expected side effect.
+
 Run the smallest diagnostic supported by the program. Do not rerun an expensive operation merely to learn an exit code that was already available.
 
 ## PERMISSION_ERROR

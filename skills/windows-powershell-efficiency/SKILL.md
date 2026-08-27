@@ -83,6 +83,8 @@ In Windows PowerShell, do not pipe a language-level `foreach (...) { ... }` stat
 
 Treat `[ordered]@{}` as an `OrderedDictionary`, not as a `[pscustomobject]`. Do not assume `Measure-Object -Property` will read dictionary keys as object properties in Windows PowerShell 5.1. Accumulate numeric totals explicitly while constructing rows, or emit `[pscustomobject]` rows first. For status receipts, initialize failure, perform every fallible calculation, set success last, and force failure again in `catch`; never emit `PASS` together with an error. See [references/command-recipes.md](references/command-recipes.md) for the exact pattern.
 
+When counting properties on JSON-derived objects, never use `$object.PSObject.Properties.Count` directly in Windows PowerShell 5.1. Member enumeration can return one `Count` value per property and expand thousands of values into output. Materialize the property collection first with `@($object.PSObject.Properties).Count`.
+
 Use `rg`, Git, Python, test runners, and project-specific tools for work they perform more reliably than a custom PowerShell pipeline.
 
 ## Avoid quoting and script-generation traps

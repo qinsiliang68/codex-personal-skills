@@ -214,6 +214,14 @@ $json = $state | ConvertTo-Json -Depth 4
 
 Do not perform another fallible receipt calculation after assigning `PASS`. A failed operation must not leave a receipt containing both a success status and an error.
 
+For a JSON object used as a dictionary, materialize its adapted property collection before counting:
+
+```powershell
+$entryCount = @($jsonObject.PSObject.Properties).Count
+```
+
+Do not use `$jsonObject.PSObject.Properties.Count`; Windows PowerShell 5.1 can member-enumerate the child properties and emit an array of their individual `Count` values instead of one scalar count.
+
 ## Select a Python runtime once
 
 Prefer the interpreter established by the project. If a local virtual environment exists and is intended for the task:
