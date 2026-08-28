@@ -77,6 +77,10 @@ Use Windows paths as Windows paths:
 - quote paths containing spaces;
 - avoid unnecessary `/mnt/c/...` or `/c/...` conversions.
 
+Do not compress PowerShell syntax by deleting token-separating whitespace. Cmdlet names, variables, keywords, and arguments must remain distinct: write `Join-Path -Path $root -ChildPath 'logs'` and `foreach ($item in $items)`, never `Join-Path$root'logs'` or `foreach ($item in$items)`. The compact forms can be parsed as different command or keyword tokens and waste a retry.
+
+`-LiteralPath` deliberately treats `*`, `?`, and brackets literally; it never expands a wildcard. Use it for known paths. When an operation intentionally needs selected children, first resolve and validate the parent, then use that cmdlet's wildcard-aware `-Path`, for example `Compress-Archive -Path (Join-Path $sourceRoot '*')`. Set `$ErrorActionPreference = 'Stop'` or the command's `-ErrorAction Stop` when a missing input must prevent later success reporting.
+
 When combining cmdlet calls with Boolean operators, wrap each invocation in parentheses: `if ((Test-Path -LiteralPath $first) -or (Test-Path -LiteralPath $second))`. Without the parentheses, Windows PowerShell can bind `-or` and the second `-LiteralPath` as arguments to the first cmdlet, report that `LiteralPath` was specified more than once, and then continue if the error is non-terminating.
 
 Do not assume `&&` unless PowerShell 7 has already been confirmed. For native executables, inspect their output and `$LASTEXITCODE` before deciding whether another command is needed.

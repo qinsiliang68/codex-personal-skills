@@ -161,6 +161,35 @@ $configPath = Join-Path $repoRoot 'configs\train.yaml'
 
 Use `-LiteralPath` with known filenames, especially when brackets or wildcard characters may appear.
 
+Keep token boundaries explicit, especially in generated or encoded commands:
+
+```powershell
+$transactions = Join-Path -Path $outputRoot -ChildPath '03_epoch_transactions'
+foreach ($file in $files) {
+    # Work with one item.
+}
+```
+
+Do not remove the spaces before variables or after `in`; `Join-Path$outputRoot` and `foreach ($file in$files)` are not safe compact equivalents.
+
+## Create a ZIP from directory contents
+
+`-LiteralPath` does not expand `*`. To archive the children of an already resolved directory without adding the directory itself as another level:
+
+```powershell
+$ErrorActionPreference = 'Stop'
+$sourceRoot = (Resolve-Path -LiteralPath $sourceRoot).Path
+if (Test-Path -LiteralPath $zipPath) {
+    throw "Archive already exists: $zipPath"
+}
+Compress-Archive -Path (Join-Path $sourceRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal
+if (-not (Test-Path -LiteralPath $zipPath -PathType Leaf)) {
+    throw "Archive was not created: $zipPath"
+}
+```
+
+Do not write `Compress-Archive -LiteralPath (Join-Path $sourceRoot '*')`: the wildcard remains literal, the archive may not be created, and Windows PowerShell can continue after non-terminating path errors unless error handling is explicit.
+
 ## Run native programs safely
 
 ```powershell
