@@ -93,18 +93,18 @@
       "files": [
         {
           "path": "references/command-recipes.md",
-          "bytes": 7720,
-          "sha256": "ed944f995f27d1b6d68a91226a48ae5c877f382f8c369ceb19bef5d3161af11c"
+          "bytes": 9085,
+          "sha256": "427f0db6702755c8764816ae47c0efe86c4b72bfba5ea15f1243b4c6f939ee37"
         },
         {
           "path": "references/error-playbook.md",
-          "bytes": 4914,
-          "sha256": "4d7bb0f1a6d85dba49bbc02586c22932a225042d010d2af5cd01748c6bf9c7fd"
+          "bytes": 5748,
+          "sha256": "f95e91b22d46641a0a12f508d0ef41f8f715bf1ad2d96b0d9f8e6f0da3796510"
         },
         {
           "path": "SKILL.md",
-          "bytes": 10535,
-          "sha256": "2b2e64a5ff1cfaf0e044265cac99ee9558f671c69a0fc2e60cde0b0264231377"
+          "bytes": 11237,
+          "sha256": "8ecae53b279432e4f7435769d27428b9b44d989781a455008e283feab769170c"
         }
       ]
     }

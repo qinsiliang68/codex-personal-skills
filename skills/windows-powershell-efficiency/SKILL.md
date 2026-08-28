@@ -59,6 +59,8 @@ Before every command, identify the exact question it should answer. If no precis
 
 Filter at the source and request only the fields, lines, files, tests, or diff sections needed for the next decision. Exploratory output should normally stay below roughly 120 lines unless the content itself is evidence the task requires.
 
+For a live or remotely written progress log, bound the read by **bytes**, not only by lines. Do not use `Get-Content -Tail` when the producer may refresh one logical line with carriage returns (`\r`) instead of newlines: PowerShell can treat the whole file as one line, allocate memory for the entire stream, and keep running remotely after the SSH client times out. Read a fixed-size suffix with `FileStream.Seek`, share the file with the writer, and decode its actual encoding. If a remote diagnostic times out, check for its exact orphaned process before retrying. See [references/command-recipes.md](references/command-recipes.md) and [references/error-playbook.md](references/error-playbook.md).
+
 Prefer compact modes such as `git status --short`, targeted diffs, selected object properties, and limited file ranges. Avoid formatting commands by default, but use `Format-List` or another final formatter when it is necessary to prevent property truncation or ambiguity.
 
 Remember that `Select-Object -First` limits emitted output but may not prevent an upstream recursive provider from traversing broadly. Reduce the input scope with a known directory, filename filter, depth, or indexed search whenever scan cost matters.

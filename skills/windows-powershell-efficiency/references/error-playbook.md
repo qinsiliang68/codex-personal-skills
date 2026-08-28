@@ -69,6 +69,19 @@ Windows PowerShell 5.1 converts native stderr into error records. Some successfu
 
 Run the smallest diagnostic supported by the program. Do not rerun an expensive operation merely to learn an exit code that was already available.
 
+## REMOTE_DIAGNOSTIC_TIMEOUT
+
+An SSH timeout does not guarantee that the remote command ended. This is especially dangerous when `Get-Content -Tail` reads a carriage-return-only progress log: the remote PowerShell process can continue reading or decoding the whole file and consume substantial memory.
+
+Before any retry:
+
+1. Inspect remote PowerShell processes with PID, parent PID, creation time, and full command line.
+2. Match the exact timed-out diagnostic; do not select processes by image name alone.
+3. Stop only that confirmed orphan when mutation is authorized.
+4. Verify memory recovery, then replace the diagnostic with the byte-bounded suffix recipe in [command-recipes.md](command-recipes.md).
+
+Do not repeatedly reconnect and launch the same diagnostic. Each retry can leave another orphan and amplify memory pressure.
+
 ## PERMISSION_ERROR
 
 Confirm the exact target and the requested operation. Determine whether the failure is filesystem ACL, process elevation, execution policy, locked file, network permission, or application authorization.

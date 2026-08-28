@@ -113,6 +113,33 @@ rg -n 'class Trainer|def train|def validate' $path
 
 Do not reread unchanged content already available in the task context.
 
+## Read a bounded suffix from a live progress log
+
+`Get-Content -Tail` is line-bounded, not byte-bounded. Do not use it for a live log that may contain carriage-return-only progress updates. Read at most the required suffix while allowing the producer to keep the file open:
+
+```powershell
+[int64]$maxBytes = 65536
+$stream = [System.IO.File]::Open(
+    $path,
+    [System.IO.FileMode]::Open,
+    [System.IO.FileAccess]::Read,
+    [System.IO.FileShare]::ReadWrite
+)
+try {
+    [int64]$take = [Math]::Min($maxBytes, $stream.Length)
+    [void]$stream.Seek(-$take, [System.IO.SeekOrigin]::End)
+    $buffer = New-Object byte[] ([int]$take)
+    $read = $stream.Read($buffer, 0, $buffer.Length)
+} finally {
+    $stream.Dispose()
+}
+$suffix = [Text.Encoding]::Unicode.GetString($buffer, 0, $read)
+```
+
+Select the encoding from the producer or an encoding probe; Windows PowerShell output captured by `Tee-Object` is often UTF-16LE (`[Text.Encoding]::Unicode`), but do not assume that for every file. Parse and emit only the final marker needed for the decision.
+
+An SSH timeout only proves that the client stopped waiting. Before retrying a timed-out remote diagnostic, inspect remote processes using exact command-line, parent PID, creation time, and PID evidence. Stop only the confirmed diagnostic process; never stop broad `powershell.exe` or `python.exe` process sets.
+
 ## Inspect Git state compactly
 
 ```powershell
