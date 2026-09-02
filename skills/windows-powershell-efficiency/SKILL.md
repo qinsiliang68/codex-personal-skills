@@ -101,6 +101,10 @@ For short one-off multiline input, prefer a literal PowerShell here-string piped
 
 When a command develops multiple escaping layers, simplify its structure before retrying it.
 
+Respect the Windows command-line length limit. Do not nest a substantial script inside another `EncodedCommand` or a long `-Command` string. If Windows reports `The command line is too long` / `命令行太长`, stage the script as a small `.ps1` file, verify the exact file, and invoke it with `-File`; do not retry with another quoting variation.
+
+Do not assume a process launched with `Start-Process` through Windows OpenSSH will survive after the SSH session closes. OpenSSH may reclaim descendants with its session job object. For an authorized operation that must outlive SSH, use a narrowly scoped Scheduled Task or another environment-owned persistent launcher, then disconnect and verify that the task and its real child process remain active. Keep stdout/stderr bounded and record the exact task, script, target, and exit state.
+
 In an expandable string, delimit a variable when the following character can be parsed as part of its name or scope. In particular, write `"${path}:$message"`, not `"$path:$message"`; the latter is a parser error because PowerShell treats the colon as variable-scope syntax.
 
 ## Diagnose before retrying
