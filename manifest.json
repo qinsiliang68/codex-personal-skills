@@ -87,6 +87,28 @@
       ]
     },
     {
+      "name": "train-ops",
+      "path": "skills/train-ops",
+      "description": "Safe local and LAN operations for YOLO/Ultralytics GPU training fleets. Use when Codex is asked to monitor YOLO training machines, deploy or recover training nodes, start the next YOLO run, avoid duplicate runs, verify runs/eval/manifests artifacts, collect lightweight results, diagnose SSH/GPU temperature/GPU memory/system memory/disk/network failures, or maintain long-running multi-node YOLO training without destabilizing the LAN. Prefer short, agent-led operational steps over condition-heavy orchestration scripts.",
+      "files": [
+        {
+          "path": "agents/openai.yaml",
+          "bytes": 209,
+          "sha256": "a709e5eb8de9eb3742b26c9afd8d9f46a157f35a324dec82aac3bade34964242"
+        },
+        {
+          "path": "scripts/probe-windows-gpu-node.ps1",
+          "bytes": 2588,
+          "sha256": "f6e0af05840a4637c8b57cb3085898714ce9478b30b1b1da66fd00a61300dcf9"
+        },
+        {
+          "path": "SKILL.md",
+          "bytes": 14617,
+          "sha256": "e58ccb5f30ba2fc0ce7e6f89d46aa808230c849c6b80164e0fd8dbb95a57f874"
+        }
+      ]
+    },
+    {
       "name": "windows-powershell-efficiency",
       "path": "skills/windows-powershell-efficiency",
       "description": "Use when executing shell, filesystem, repository, testing, build, or diagnostic operations in native Windows PowerShell. Enforces targeted queries, bounded output, literal paths, stable tool selection, and diagnosis before retry. Do not use for answer-only Windows questions that require no shell operation.",

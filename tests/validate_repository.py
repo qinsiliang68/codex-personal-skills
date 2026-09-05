@@ -15,6 +15,7 @@ EXPECTED_SKILLS = {
     "parser-output-manual-annotation",
     "repo-development-protocol",
     "repo-file-management",
+    "train-ops",
     "windows-powershell-efficiency",
 }
 EXPECTED_REPOSITORY = "qinsiliang68/codex-personal-skills"
@@ -128,6 +129,18 @@ class PublicSkillRepositoryTests(unittest.TestCase):
             "['status'] = 'PASS'",
         ):
             self.assertIn(required, combined)
+
+    def test_train_ops_covers_windows_task_priority(self) -> None:
+        skill_text = (SKILLS_ROOT / "train-ops" / "SKILL.md").read_text(
+            encoding="utf-8"
+        )
+        for required in (
+            "New-ScheduledTaskSettingsSet",
+            "$settings.Priority = 4",
+            "BelowNormal",
+            "--output-root",
+        ):
+            self.assertIn(required, skill_text)
 
     def test_manifest_matches_every_published_skill_file(self) -> None:
         manifest_path = ROOT / "manifest.json"

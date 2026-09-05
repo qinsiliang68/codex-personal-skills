@@ -1,0 +1,4 @@
+interface:
+  display_name: "YOLO Train Ops"
+  short_description: "Operate LAN YOLO training nodes safely."
+  default_prompt: "Use $train-ops to monitor and operate YOLO training nodes without duplicate runs."
