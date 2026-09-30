@@ -13,17 +13,17 @@ Use the current conversation, user-provided inventory, and project ledgers as th
 
 ## Hard Rules
 
-- Across the entire fleet, allow at most one active SSH/SCP/SFTP connection at any instant. This is global, not per host: connections to different machines must never overlap. Before and after every remote operation, check local `ssh`, `scp`, and `sftp` processes plus established TCP/22 connections.
+- Do not impose a fleet-wide SSH/SCP/SFTP connection limit. Independent read-only probes may run concurrently when the current network and nodes can handle them; bound transfers by the active task's bandwidth and concurrency policy.
 - Prefer more short, bounded operations over one large script. Use the cycle: observe raw state, let the agent decide, perform one action, then verify it before choosing the next action.
 - Keep operational scripts single-purpose and normally measured in tens of lines. If a script starts combining inventory, interpretation, copying, packaging, recovery, and fleet scheduling or grows toward hundreds of lines, split it into separate invocations.
 - Allow simple script conditions only for mechanical safety and fail-closed behavior, such as exact path/identity checks, required-file checks, free-space thresholds, exit codes, counts, sizes, and hashes. Do not encode operational judgment, exception classification, recovery selection, node scheduling, or next-step choice in script branches.
-- Do not create a one-script-for-all-nodes workflow merely to reduce tool calls. Run one node and one bounded phase at a time, inspect its actual output, and make the next decision in the agent.
+- Do not create a one-script-for-all-nodes workflow merely to reduce tool calls. Keep each probe or action bounded, inspect its actual output, and make the next decision in the agent.
 - Do not add automatic retry loops or unattended decision loops. A retry is a new explicit operation after the agent reads the previous failure. Multiple tool calls are preferred when they preserve judgment and observability.
 - Keep SSH short-lived. Connect, run the required command, disconnect. Do not leave SSH sessions open unless the user explicitly asked for a long-lived task.
 - Before and after risky operations, check local `ssh`, `scp`, and `sftp` processes and established port-22 connections. Kill only processes created by the current Codex task.
 - Do not run old operational scripts from archives unless the user explicitly authorizes them. Treat archive/session directories as read-only references unless the user explicitly asks to write there.
 - Do not route large files through the local machine. Prefer remote-to-remote transfer from the target node, and always apply a bandwidth limit for SCP/SFTP-style transfers.
-- Completed runs must be collected to the local machine into the current experiment archive after verification. Exclude datasets and bulk checkpoints unless the user asks for them; use one limited-bandwidth transfer at a time.
+- Completed runs must be collected to the local machine into the current experiment archive after verification. Exclude datasets and bulk checkpoints unless the user asks for them; keep transfers within the active task's bandwidth and concurrency limits.
 - For final handoff archives, separate weights from materials: keep `best.pt` and `last.pt` in an uncompressed per-run weights folder for fast lookup, and package non-weight materials separately with `.pt` files excluded. Verify both sides by real file counts before saying cleanup is safe.
 - Formal training must be launched in a foreground or interactive window/task so the user can see logs and process command lines. Background tasks are allowed only for maintenance such as transfer, install, or setup.
 - Treat any path read repeatedly by training as input and keep it on the node's real C-drive SSD: dataset, workdir, staging, hardlink base cache, active data cache, CSVs, manifests, initial model weights, code, and runtime environment. Reject junctions, symlinks, or mounts that redirect these paths to a mechanical disk.
@@ -54,8 +54,8 @@ Use `scripts/probe-windows-gpu-node.ps1` only when its compact raw fact bundle i
 
 1. Confirm the current objective and constraints from the newest user message.
 2. Check local residual SSH/SCP/SFTP and local network-risk services before remote work.
-3. Issue one short probe or bounded action, inspect the returned evidence, and make the next decision in the agent. Do not precompute a long conditional workflow.
-4. Process nodes one at a time in the user's requested order or the active ledger order.
+3. Issue short probes or bounded actions; independent read-only probes may run concurrently when safe. Inspect their evidence before deciding the next action. Do not precompute a long conditional workflow.
+4. Process deployment actions node by node in the user's requested order or the active ledger order. Routine inspections may cover independent nodes concurrently.
 5. For each node, gather enough state to decide, not merely report:
    - SSH reachability and hostname.
    - GPU memory, utilization, temperature, and driver visibility.
