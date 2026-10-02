@@ -89,22 +89,27 @@
     {
       "name": "train-ops",
       "path": "skills/train-ops",
-      "description": "Safe local and LAN operations for YOLO/Ultralytics GPU training fleets. Use when Codex is asked to monitor YOLO training machines, deploy or recover training nodes, start the next YOLO run, avoid duplicate runs, verify runs/eval/manifests artifacts, collect lightweight results, diagnose SSH/GPU temperature/GPU memory/system memory/disk/network failures, or maintain long-running multi-node YOLO training without destabilizing the LAN. Prefer short, agent-led operational steps over condition-heavy orchestration scripts.",
+      "description": "Operate local or LAN GPU training and inference jobs from deployment through recovery, result return, and archive acceptance. Use for machine inspections, resource and temperature control, checkpoint-based inference, nonduplicate work assignment, and artifact completeness checks. Follow the current project runner and fleet policy; do not redesign experiments or judge scientific results.",
       "files": [
         {
           "path": "agents/openai.yaml",
-          "bytes": 209,
-          "sha256": "a709e5eb8de9eb3742b26c9afd8d9f46a157f35a324dec82aac3bade34964242"
+          "bytes": 283,
+          "sha256": "6984f982651772c68b67917b3fbad964c4bcd2508e428ef64e7b5cf2cad13836"
+        },
+        {
+          "path": "references/windows-node-operations.md",
+          "bytes": 9079,
+          "sha256": "530ca25428707774e6a2c07b99d860b9e6014510dd1968e5eaa763b6b286cef9"
         },
         {
           "path": "scripts/probe-windows-gpu-node.ps1",
-          "bytes": 2588,
-          "sha256": "f6e0af05840a4637c8b57cb3085898714ce9478b30b1b1da66fd00a61300dcf9"
+          "bytes": 4109,
+          "sha256": "798c4325b118a2fe80600375fb66b6999f80fd5cea0be4f993a3c2e51da95c8c"
         },
         {
           "path": "SKILL.md",
-          "bytes": 14617,
-          "sha256": "e58ccb5f30ba2fc0ce7e6f89d46aa808230c849c6b80164e0fd8dbb95a57f874"
+          "bytes": 24342,
+          "sha256": "9fe207926dd43761817aab32d2584e559ff6ddbc45a021f590fd597222205825"
         }
       ]
     },

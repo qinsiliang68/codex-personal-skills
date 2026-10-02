@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shutil
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -134,6 +136,9 @@ class PublicSkillRepositoryTests(unittest.TestCase):
         skill_text = (SKILLS_ROOT / "train-ops" / "SKILL.md").read_text(
             encoding="utf-8"
         )
+        skill_text += (SKILLS_ROOT / "train-ops" / "references" / "windows-node-operations.md").read_text(
+            encoding="utf-8"
+        )
         for required in (
             "New-ScheduledTaskSettingsSet",
             "$settings.Priority = 4",
@@ -174,6 +179,7 @@ class PublicSkillRepositoryTests(unittest.TestCase):
                 ".json",
                 ".md",
                 ".py",
+                ".ps1",
                 ".txt",
                 ".yaml",
                 ".yml",
@@ -185,6 +191,71 @@ class PublicSkillRepositoryTests(unittest.TestCase):
                 self.assertIsNone(pattern.search(text), f"local profile path in {path}")
             for label, pattern in SECRET_PATTERNS.items():
                 self.assertIsNone(pattern.search(text), f"{label} pattern in {path}")
+
+
+@unittest.skipUnless(shutil.which("pwsh"), "PowerShell is required for the Windows probe")
+class TrainOpsProbeTests(unittest.TestCase):
+    def run_probe(self, mode: str) -> subprocess.CompletedProcess[str]:
+        probe = SKILLS_ROOT / "train-ops" / "scripts" / "probe-windows-gpu-node.ps1"
+        # Isolate OS queries; never inspect a real training task or GPU in this test.
+        stubs = r'''
+$mode = '__MODE__'
+function nvidia-smi {
+    $global:LASTEXITCODE = if ($mode -eq 'gpu-failure') { 9 } else { 0 }
+    'GPU-test, Example GPU, 1, 10, 100, 50, 60, 100, 150, 150'
+}
+function Get-CimInstance {
+    param($ClassName)
+    switch ($ClassName) {
+        'Win32_OperatingSystem' {
+            if ($mode -eq 'memory-failure') { Write-Error 'memory query denied'; return }
+            [pscustomobject]@{LastBootUpTime=[datetime]'2026-01-01';FreePhysicalMemory=1000000;TotalVisibleMemorySize=2000000}
+        }
+        'Win32_Process' {
+            if ($mode -ne 'empty') {
+                [pscustomobject]@{ProcessId=42;ParentProcessId=7;Name='python.exe';WorkingSetSize=1024;
+                    CommandLine=('uv run train.py --padding ' + ('x' * 400) + ' --output-root C:\runs\formal-example')}
+            }
+        }
+    }
+}
+function Get-PSDrive { param($PSProvider) [pscustomobject]@{Name='C';Free=1000000;Used=1000000;Root='C:\'} }
+function Get-Service { param($Name) }
+function Get-NetTCPConnection { param($LocalPort,$State) }
+function Get-ScheduledTask {
+    param($TaskName)
+    if ($mode -eq 'task-failure') { Write-Error 'task query denied'; return }
+}
+'''.replace("__MODE__", mode)
+        command = stubs + "\n& '" + str(probe).replace("'", "''") + "'"
+        return subprocess.run(
+            [shutil.which("pwsh"), "-NoProfile", "-NonInteractive", "-Command", command],
+            capture_output=True, text=True, encoding="utf-8", timeout=30,
+        )
+
+    def test_query_failure_is_not_reported_as_an_empty_success(self) -> None:
+        for mode, section in (
+            ("memory-failure", "MEMORY"), ("task-failure", "TASKS"), ("gpu-failure", "GPU")
+        ):
+            with self.subTest(mode=mode):
+                result = self.run_probe(mode)
+                self.assertNotEqual(0, result.returncode, result.stdout)
+                self.assertIn(f"{section}_STATUS=ERROR", result.stdout)
+                self.assertIn("PROBE_STATUS=INCOMPLETE", result.stdout)
+                self.assertIn("DISKS_STATUS=OK", result.stdout)
+
+    def test_successful_empty_query_is_explicit(self) -> None:
+        result = self.run_probe("empty")
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertIn("TRAINING_LIKE_PROC_COUNT=0", result.stdout)
+        self.assertIn("PROCESSES_STATUS=OK", result.stdout)
+        self.assertIn("PROBE_STATUS=OK", result.stdout)
+
+    def test_full_command_and_parent_identify_the_run(self) -> None:
+        result = self.run_probe("normal")
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertIn("--output-root C:\\runs\\formal-example", result.stdout)
+        self.assertIn("pid=42;parent=7;", result.stdout)
 
 
 if __name__ == "__main__":
